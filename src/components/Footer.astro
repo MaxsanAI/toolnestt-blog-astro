@@ -14,17 +14,20 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer
-  class:list={["app-layout", { "mt-auto": !noMarginTop }, className]}
+  class:list={["portal-layout", { "mt-auto": !noMarginTop }, className]}
   {...attrs}
 >
   <div
-    class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4"
+    class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row sm:py-4"
   >
-    <Socials />
-    <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
+    <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row text-sm">
       <span>{t.footer.copyright} &#169; {currentYear}</span>
-      <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
-      <span>{t.footer.allRightsReserved}</span>
+      <span class="px-2">|</span>
+      <a href="https://toolsnestt.com" class="hover:text-accent underline underline-offset-4">
+        toolsnestt.com
+      </a>
+      <span class="hidden sm:inline">&nbsp;—&nbsp;{t.footer.allRightsReserved}</span>
     </div>
+    <Socials />
   </div>
 </footer>
