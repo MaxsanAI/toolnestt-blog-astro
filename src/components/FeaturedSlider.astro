@@ -6,55 +6,30 @@ const posts = await getCollection("posts");
 const featuredPosts = getSortedPosts(posts).filter(({ data }) => data.featured).slice(0, 5);
 ---
 
-<div class="relative w-full h-80 overflow-hidden rounded-xl bg-gray-900">
-  <div class="flex transition-transform duration-500 ease-out" id="slider-container">
+<div class="relative w-full overflow-hidden rounded-2xl">
+  <div class="flex snap-x snap-mandatory overflow-x-auto scrollbar-hide h-80">
     {featuredPosts.map((post) => (
-      <div class="min-w-full h-80 flex flex-col justify-end p-8 bg-gradient-to-t from-black/80 to-transparent">
-        <h2 class="text-3xl font-bold text-white mb-2">{post.data.title}</h2>
-        <p class="text-gray-200 line-clamp-2">{post.data.description}</p>
-        <a href={`/posts/${post.slug}`} class="mt-4 inline-block text-accent font-semibold hover:underline">
-          Read More →
-        </a>
+      <div class="min-w-full snap-center relative">
+        <img 
+          src={post.data.ogImage ?? "/default-og.png"} 
+          alt={post.data.title}
+          class="w-full h-full object-cover"
+        />
+        <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
+          <h3 class="text-2xl font-bold">{post.data.title}</h3>
+          <a href={`/posts/${post.slug}`} class="text-accent underline hover:text-white">Read Story</a>
+        </div>
       </div>
     ))}
-  </div>
-  
-  <button id="prev" class="absolute left-4 top-1/2 bg-white/20 p-2 rounded-full text-white">←</button>
-  <button id="next" class="absolute right-4 top-1/2 bg-white/20 p-2 rounded-full text-white">→</button>
-</div>
-
-<div class="mt-4 overflow-hidden border-y border-gray-200 dark:border-gray-700 py-2 bg-gray-50 dark:bg-gray-800 rounded">
-  <div class="animate-marquee whitespace-nowrap text-sm font-medium text-gray-700 dark:text-gray-300">
-    <span class="mx-4">● Latest Tech News: New AI models released today!</span>
-    <span class="mx-4">● Quick Tool: Use our online PDF cropper for fast results.</span>
-    <span class="mx-4">● Tip: Optimize your workflow with these top 5 productivity tools.</span>
   </div>
 </div>
 
 <style>
-  @keyframes marquee {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
-  .animate-marquee {
-    display: inline-block;
-    animation: marquee 20s linear infinite;
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 </style>
-
-<script>
-  const container = document.getElementById('slider-container');
-  const next = document.getElementById('next');
-  const prev = document.getElementById('prev');
-  let current = 0;
-
-  next?.addEventListener('click', () => {
-    current = (current + 1) % 5;
-    container!.style.transform = `translateX(-${current * 100}%)`;
-  });
-
-  prev?.addEventListener('click', () => {
-    current = (current - 1 + 5) % 5;
-    container!.style.transform = `translateX(-${current * 100}%)`;
-  });
-</script>
