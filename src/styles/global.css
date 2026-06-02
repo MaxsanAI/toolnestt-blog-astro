@@ -5,42 +5,41 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @layer base {
+  /* OVO REŠAVA "SETANJE" (Horizontal Layout Shift) */
+  html {
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+  }
+
   * {
     @apply border-border outline-accent/75;
-    scrollbar-width: auto;
-    scrollbar-color: var(--color-muted) transparent;
   }
+
+  body {
+    @apply min-h-screen bg-white text-gray-900 transition-colors duration-300;
+  }
+
   a,
   button {
     @apply outline-accent outline-offset-1 focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
   }
+
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
 }
 
-@utility max-w-app {
-  @apply max-w-3xl;
-}
-
-@utility app-layout {
-  @apply max-w-app mx-auto w-full px-4;
-}
-
+/* Fiksirana širina za desktop i responzivnost */
 @utility portal-layout {
-  @apply max-w-7xl mx-auto w-full px-4;
+  @apply max-w-[1280px] mx-auto w-full px-4 sm:px-6 lg:px-8;
 }
 
-@utility active-nav {
-  @apply underline decoration-wavy decoration-2 underline-offset-8;
-}
-
-.sticky-sidebar {
+@utility sticky-sidebar {
   @apply md:sticky md:top-6 md:h-[calc(100vh-3rem)] md:overflow-y-auto;
 }
 
-.hover-lift {
+@utility hover-lift {
   @apply transition-transform duration-200 hover:-translate-y-1;
 }
 
