@@ -1,18 +1,16 @@
 ---
-import { getCollection } from "astro:content";
-import Layout from "@/layouts/Layout.astro";
-import Main from "@/layouts/Main.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Layout from "@/layouts/Layout.astro"; // Ako ovo pukne, proveri da li je putanja Layout.astro
 import Card from "@/components/Card.astro";
-import { getSortedPosts } from "@/utils/getSortedPosts";
-import { getUniqueTags } from "@/utils/getUniqueTags";
-import { getPostsByTag } from "@/utils/getPostsByTag";
 
+// Koristimo direktan fetch umesto sumnjivih utils-a dok ne vidimo strukturu
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
-  const tags = getUniqueTags(posts);
-  return tags.flatMap(({ tag }) => {
-    const tagPosts = getPostsByTag(posts, tag);
-    // Ovde pravimo paginaciju (npr. 5 postova po strani)
+  // Izvlači sve jedinstvene tagove
+  const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
+  
+  return allTags.flatMap((tag) => {
+    const tagPosts = posts.filter(post => post.data.tags?.includes(tag));
     return Array.from({ length: Math.ceil(tagPosts.length / 5) }, (_, i) => ({
       params: { tag, page: String(i + 1) },
       props: { posts: tagPosts.slice(i * 5, (i + 1) * 5) },
@@ -20,14 +18,19 @@ export async function getStaticPaths() {
   });
 }
 
+type Props = {
+  posts: CollectionEntry<"posts">[];
+};
+
 const { tag } = Astro.params;
 const { posts } = Astro.props;
 ---
 
 <Layout title={`Tag: ${tag}`}>
-  <Main pageTitle={`Tag: ${tag}`}>
+  <main class="mx-auto max-w-3xl px-4 py-10">
+    <h1 class="text-2xl font-bold mb-6 capitalize">Tag: {tag}</h1>
     <ul>
-      {posts.map(post => <Card {...post} />)}
+      {posts.map((post: CollectionEntry<"posts">) => <Card {...post} />)}
     </ul>
-  </Main>
+  </main>
 </Layout>
