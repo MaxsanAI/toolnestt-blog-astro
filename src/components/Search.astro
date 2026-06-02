@@ -2,6 +2,7 @@
 import { getRelativeLocaleUrl } from "astro:i18n";
 import "@pagefind/default-ui/css/ui.css";
 import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import { getAssetPath } from "@/utils/withBase";
@@ -39,8 +40,6 @@ const t = useTranslations(locale);
       </div>
     </Main>
   </div>
-
-  <Footer />
 </Layout>
 
 <script>
@@ -55,8 +54,7 @@ const t = useTranslations(locale);
     const onIdle = window.requestIdleCallback || (cb => setTimeout(cb, 1));
 
     onIdle(async () => {
-      // @ts-ignore
-const { PagefindUI } = await import("@pagefind/default-ui");
+      const { PagefindUI } = await import("@pagefind/default-ui");
 
       if (import.meta.env.DEV) {
         pageFindSearch.innerHTML = `
