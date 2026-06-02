@@ -57,7 +57,8 @@ const t = useTranslations(locale);
     const onIdle = window.requestIdleCallback || (cb => setTimeout(cb, 1));
 
     onIdle(async () => {
-      const { PagefindUI } = await import("@pagefind/default-ui");
+      // @ts-ignore
+const { PagefindUI } = await import("@pagefind/default-ui");
 
       if (import.meta.env.DEV) {
         pageFindSearch.innerHTML = `
