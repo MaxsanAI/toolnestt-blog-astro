@@ -75,8 +75,6 @@ const rssHref = getRelativeLocaleUrl(
       href={new URL(rssHref, Astro.site)}
     />
 
-    <meta name="theme-color" content="" />
-
     <slot name="head" />
 
     {
@@ -103,9 +101,12 @@ const rssHref = getRelativeLocaleUrl(
     <ClientRouter />
   </head>
   <body
-    class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground min-h-svh"
+    class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground min-h-screen flex flex-col"
   >
-    <slot />
+    <div class="portal-layout flex-grow w-full">
+      <slot />
+    </div>
+
     <script>
       import "@/scripts/theme";
     </script>
