@@ -28,8 +28,20 @@
   @apply max-w-app mx-auto w-full px-4;
 }
 
+@utility portal-layout {
+  @apply max-w-7xl mx-auto w-full px-4;
+}
+
 @utility active-nav {
   @apply underline decoration-wavy decoration-2 underline-offset-8;
+}
+
+.sticky-sidebar {
+  @apply md:sticky md:top-6 md:h-[calc(100vh-3rem)] md:overflow-y-auto;
+}
+
+.hover-lift {
+  @apply transition-transform duration-200 hover:-translate-y-1;
 }
 
 :target {
