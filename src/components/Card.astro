@@ -1,6 +1,5 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { getPostUrl } from "@/utils/getPostPaths";
 import { slugifyStr } from "@/utils/slugify";
 import Datetime from "./Datetime.astro";
 
@@ -8,18 +7,14 @@ type Props = {
   variant?: "h2" | "h3";
 } & CollectionEntry<"posts">;
 
-const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+const { variant: Heading = "h2", id, data, body } = Astro.props;
 const { title, description, tags, ...props } = data;
 
-// Funkcija za procenu vremena čitanja (u minutima)
-const readingTime = Math.ceil(data.body.split(" ").length / 200);
+const readingTime = Math.ceil((body?.split(" ").length || 0) / 200);
 ---
 
 <li class="p-5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 transition-all hover:border-accent shadow-sm">
-  <a
-    href={getPostUrl(id, filePath, Astro.currentLocale)}
-    class="block group"
-  >
+  <a href={`/posts/${id}`} class="block group">
     <Heading 
       class="text-xl font-bold mb-2 group-hover:text-accent transition-colors"
       transition:name={slugifyStr(title.replaceAll(".", "-"))}
@@ -30,9 +25,7 @@ const readingTime = Math.ceil(data.body.split(" ").length / 200);
   
   <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
     <Datetime {...props} />
-    <span class="flex items-center gap-1">
-      • {readingTime} min read
-    </span>
+    <span class="flex items-center gap-1">• {readingTime} min read</span>
     {tags && tags.length > 0 && (
       <span class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded ml-auto">
         {tags[0]}
@@ -40,7 +33,5 @@ const readingTime = Math.ceil(data.body.split(" ").length / 200);
     )}
   </div>
   
-  <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
-    {description}
-  </p>
+  <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">{description}</p>
 </li>
