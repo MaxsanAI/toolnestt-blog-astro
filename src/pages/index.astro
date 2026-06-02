@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
 import FeaturedSlider from "@/components/FeaturedSlider.astro";
 import Search from "@/components/Search.astro"; 
@@ -79,6 +78,4 @@ const allTags = getUniqueTags(posts);
       </aside>
     </div>
   </main>
-  
-  <Footer />
 </Layout>
