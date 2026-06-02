@@ -23,6 +23,25 @@ const featuredPosts = getSortedPosts(posts).filter(({ data }) => data.featured).
   <button id="next" class="absolute right-4 top-1/2 bg-white/20 p-2 rounded-full text-white">→</button>
 </div>
 
+<div class="mt-4 overflow-hidden border-y border-gray-200 dark:border-gray-700 py-2 bg-gray-50 dark:bg-gray-800 rounded">
+  <div class="animate-marquee whitespace-nowrap text-sm font-medium text-gray-700 dark:text-gray-300">
+    <span class="mx-4">● Latest Tech News: New AI models released today!</span>
+    <span class="mx-4">● Quick Tool: Use our online PDF cropper for fast results.</span>
+    <span class="mx-4">● Tip: Optimize your workflow with these top 5 productivity tools.</span>
+  </div>
+</div>
+
+<style>
+  @keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  .animate-marquee {
+    display: inline-block;
+    animation: marquee 20s linear infinite;
+  }
+</style>
+
 <script>
   const container = document.getElementById('slider-container');
   const next = document.getElementById('next');
