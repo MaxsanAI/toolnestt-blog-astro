@@ -4,13 +4,13 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
+import FeaturedSlider from "@/components/FeaturedSlider.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
-import config from "@/config";
 
 const posts = await getCollection("posts");
 const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured).slice(0, 5);
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
+const popularPosts = sortedPosts.slice(0, 4);
 ---
 
 <Layout>
@@ -20,9 +20,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
     
     <section id="hero-slider" class="mb-10">
       <h2 class="text-xl font-bold mb-4 uppercase tracking-wider">Featured Stories</h2>
-      <div class="h-80 w-full rounded-xl bg-gray-800 flex items-center justify-center text-white">
-        <p>Slider Placeholder (Top 5 Featured)</p>
-      </div>
+      <FeaturedSlider />
     </section>
 
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
@@ -64,6 +62,16 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
         
         <div class="p-5 border border-gray-200 rounded-lg dark:border-gray-700">
           <h3 class="font-bold mb-4">Popular Posts</h3>
+          <ul class="space-y-4">
+            {popularPosts.map(post => (
+              <li>
+                <a href={`/posts/${post.slug}`} class="block hover:text-accent">
+                  <h4 class="font-medium text-sm">{post.data.title}</h4>
+                  <span class="text-xs text-gray-500">{new Date(post.data.pubDatetime).toDateString()}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </aside>
 
