@@ -5,12 +5,15 @@ import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
 import FeaturedSlider from "@/components/FeaturedSlider.astro";
+import Search from "@/components/Search.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
+import { getUniqueTags } from "@/utils/getUniqueTags";
 
 const posts = await getCollection("posts");
 const sortedPosts = getSortedPosts(posts);
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 const popularPosts = sortedPosts.slice(0, 4);
+const allTags = getUniqueTags(posts);
 ---
 
 <Layout>
@@ -26,23 +29,17 @@ const popularPosts = sortedPosts.slice(0, 4);
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
       
       <aside class="hidden md:block md:col-span-2 space-y-6 sticky-sidebar">
-  <h3 class="font-bold uppercase text-sm border-b pb-2">Tech Categories</h3>
-  <ul class="space-y-2 text-sm">
-    <li><a href="/tags/artificial-intelligence" class="hover:text-accent">Artificial Intelligence</a></li>
-    <li><a href="/tags/web-development" class="hover:text-accent">Web Development</a></li>
-    <li><a href="/tags/cybersecurity" class="hover:text-accent">Cybersecurity</a></li>
-    <li><a href="/tags/cloud-computing" class="hover:text-accent">Cloud Computing</a></li>
-    <li><a href="/tags/software-engineering" class="hover:text-accent">Software Engineering</a></li>
-  </ul>
-
-  <h3 class="font-bold uppercase text-sm border-b pb-2 pt-4">Tools & How-To</h3>
-  <ul class="space-y-2 text-sm">
-    <li><a href="/tags/pdf-utilities" class="hover:text-accent">PDF Utilities</a></li>
-    <li><a href="/tags/image-processing" class="hover:text-accent">Image Processing</a></li>
-    <li><a href="/tags/code-snippets" class="hover:text-accent">Code Snippets</a></li>
-    <li><a href="/tags/productivity" class="hover:text-accent">Productivity Tools</a></li>
-  </ul>
-</aside>
+        <h3 class="font-bold uppercase text-sm border-b pb-2">Tech Categories</h3>
+        <ul class="space-y-2 text-sm">
+          {allTags.map(({ tag, tagName }) => (
+            <li>
+              <a href={`/tags/${tag}`} class="hover:text-accent capitalize block py-1">
+                {tagName}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
 
       <section class="md:col-span-7">
         <h2 class="text-2xl font-semibold mb-6">Latest Updates</h2>
@@ -56,6 +53,11 @@ const popularPosts = sortedPosts.slice(0, 4);
       </section>
 
       <aside class="md:col-span-3 space-y-6">
+        <div class="p-5 border border-gray-200 rounded-lg dark:border-gray-700">
+          <h3 class="font-bold mb-4">Search</h3>
+          <Search searchList={sortedPosts} />
+        </div>
+
         <div class="p-5 border border-gray-200 rounded-lg dark:border-gray-700">
           <h3 class="font-bold mb-4">Newsletter</h3>
           <p class="text-sm mb-4">Subscribe for the latest tech news.</p>
