@@ -11,25 +11,15 @@ const featuredPosts = getSortedPosts(posts).filter(({ data }) => data.featured).
     {featuredPosts.map((post) => (
       <div class="min-w-full snap-center relative">
         <img 
-          src={post.data.ogImage ?? "/default-og.png"} 
+          src={typeof post.data.ogImage === 'string' ? post.data.ogImage : post.data.ogImage?.src ?? "/default-og.png"}
           alt={post.data.title}
           class="w-full h-full object-cover"
         />
         <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
           <h3 class="text-2xl font-bold">{post.data.title}</h3>
-          <a href={`/posts/${post.slug}`} class="text-accent underline hover:text-white">Read Story</a>
+          <a href={`/posts/${post.id}`} class="text-accent underline hover:text-white">Read Story</a>
         </div>
       </div>
     ))}
   </div>
 </div>
-
-<style>
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-</style>
