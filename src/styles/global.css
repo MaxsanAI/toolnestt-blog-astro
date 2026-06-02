@@ -5,7 +5,6 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @layer base {
-  /* OVO REŠAVA "SETANJE" (Horizontal Layout Shift) */
   html {
     overflow-y: scroll;
     scrollbar-gutter: stable;
@@ -30,10 +29,10 @@
   }
 }
 
-/* Fiksirana širina za desktop i responzivnost */
 @utility portal-layout {
   @apply max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8;
 }
+
 @utility sticky-sidebar {
   @apply md:sticky md:top-6 md:h-[calc(100vh-3rem)] md:overflow-y-auto;
 }
