@@ -1,82 +1,33 @@
 ---
-export const prerender = false;
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
+import Main from "@/layouts/Main.astro";
 import Card from "@/components/Card.astro";
-import FeaturedSlider from "@/components/FeaturedSlider.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { getUniqueTags } from "@/utils/getUniqueTags";
+import { getPostsByTag } from "@/utils/getPostsByTag";
 
-const posts = await getCollection("posts");
-const sortedPosts = getSortedPosts(posts);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
-const popularPosts = sortedPosts.slice(0, 4);
-const allTags = getUniqueTags(posts);
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  const tags = getUniqueTags(posts);
+  return tags.flatMap(({ tag }) => {
+    const tagPosts = getPostsByTag(posts, tag);
+    // Ovde pravimo paginaciju (npr. 5 postova po strani)
+    return Array.from({ length: Math.ceil(tagPosts.length / 5) }, (_, i) => ({
+      params: { tag, page: String(i + 1) },
+      props: { posts: tagPosts.slice(i * 5, (i + 1) * 5) },
+    }));
+  });
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
 ---
 
-<Layout>
-  <Header />
-  
-  <main id="main-content" class="portal-layout py-6">
-    
-    <section id="hero-slider" class="mb-10">
-      <h2 class="text-xl font-bold mb-4 uppercase tracking-wider">Featured Stories</h2>
-      <FeaturedSlider />
-    </section>
-
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-      
-      <aside class="hidden md:block md:col-span-2 space-y-6 sticky-sidebar">
-        <h3 class="font-bold uppercase text-sm border-b pb-2">Tech Categories</h3>
-        <ul class="space-y-2 text-sm">
-          {allTags.map(({ tag, tagName }) => (
-            <li>
-              <a href={`/tags/${tag}`} class="hover:text-accent capitalize block py-1">
-                {tagName}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </aside>
-
-      <section class="md:col-span-7">
-        <h2 class="text-2xl font-semibold mb-6">Latest Updates</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {recentPosts.slice(0, 6).map(post => (
-            <div class="hover-lift">
-              <Card {...post} />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <aside class="md:col-span-3 space-y-6">
-        <div class="p-5 border border-gray-200 rounded-lg dark:border-gray-700">
-          <h3 class="font-bold mb-4">Newsletter</h3>
-          <p class="text-sm mb-4">Subscribe for the latest tech news.</p>
-          <input type="email" placeholder="Your email" class="w-full p-2 border rounded text-sm mb-2" />
-          <button class="w-full bg-accent text-white py-2 rounded text-sm">Subscribe</button>
-        </div>
-        
-        <div class="p-5 border border-gray-200 rounded-lg dark:border-gray-700">
-          <h3 class="font-bold mb-4">Popular Posts</h3>
-          <ul class="space-y-4">
-            {popularPosts.map(post => (
-              <li>
-                <a href={`/posts/${post.id}`} class="block hover:text-accent">
-                  <h4 class="font-medium text-sm">{post.data.title}</h4>
-                  <span class="text-xs text-gray-500">{new Date(post.data.pubDatetime).toDateString()}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </aside>
-
-    </div>
-  </main>
-  
-  <Footer />
+<Layout title={`Tag: ${tag}`}>
+  <Main pageTitle={`Tag: ${tag}`}>
+    <ul>
+      {posts.map(post => <Card {...post} />)}
+    </ul>
+  </Main>
 </Layout>
