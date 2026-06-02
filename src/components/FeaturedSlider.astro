@@ -6,8 +6,8 @@ const posts = await getCollection("posts");
 const featuredPosts = getSortedPosts(posts).filter(({ data }) => data.featured).slice(0, 5);
 ---
 
-<div class="relative w-full overflow-hidden rounded-2xl">
-  <div class="flex snap-x snap-mandatory overflow-x-auto scrollbar-hide h-80">
+<div class="relative w-full overflow-hidden rounded-2xl group">
+  <div id="slider" class="flex snap-x snap-mandatory overflow-x-auto scrollbar-hide h-80 scroll-smooth">
     {featuredPosts.map((post) => (
       <div class="min-w-full snap-center relative">
         <img 
@@ -17,9 +17,33 @@ const featuredPosts = getSortedPosts(posts).filter(({ data }) => data.featured).
         />
         <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
           <h3 class="text-2xl font-bold">{post.data.title}</h3>
-          <a href={`/posts/${post.id}`} class="text-accent underline hover:text-white">Read Story</a>
+          <a href={`/posts/${post.id}`} class="text-accent underline hover:text-white">Čitaj dalje</a>
         </div>
       </div>
     ))}
   </div>
 </div>
+
+<script is:inline>
+  const slider = document.getElementById('slider');
+  let autoPlay = setInterval(() => {
+    if (!slider) return;
+    // Ako smo na kraju, vrati se na početak, inače scroll-uj na sledeću sliku
+    const isAtEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10;
+    slider.scrollBy({ left: isAtEnd ? -slider.scrollWidth : slider.clientWidth, behavior: 'smooth' });
+  }, 5000);
+
+  // Pauziraj auto-play kada korisnik mišem pređe preko slidera
+  slider.addEventListener('mouseenter', () => clearInterval(autoPlay));
+  slider.addEventListener('mouseleave', () => {
+    autoPlay = setInterval(() => {
+      const isAtEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10;
+      slider.scrollBy({ left: isAtEnd ? -slider.scrollWidth : slider.clientWidth, behavior: 'smooth' });
+    }, 5000);
+  });
+</script>
+
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
