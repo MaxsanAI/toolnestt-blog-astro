@@ -64,7 +64,7 @@ const allTags = getUniqueTags(posts);
           <ul class="space-y-4">
             {popularPosts.map(post => (
               <li>
-                <a href={`/posts/${post.slug}`} class="block hover:text-accent">
+                <a href={`/posts/${post.id}`} class="block hover:text-accent">
                   <h4 class="font-medium text-sm">{post.data.title}</h4>
                   <span class="text-xs text-gray-500">{new Date(post.data.pubDatetime).toDateString()}</span>
                 </a>
