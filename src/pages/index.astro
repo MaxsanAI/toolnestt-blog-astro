@@ -1,137 +1,74 @@
 ---
 import { getCollection } from "astro:content";
-import { getRelativeLocaleUrl } from "astro:i18n";
-import IconRss from "@/assets/icons/IconRss.svg";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Socials from "@/components/Socials.astro";
 import Card from "@/components/Card.astro";
-import LinkButton from "@/components/LinkButton.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
-import { useTranslations } from "@/i18n";
 import config from "@/config";
-
-const { socials, posts: postsConfig } = config;
-
-const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
 
 const posts = await getCollection("posts");
 const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
+const featuredPosts = sortedPosts.filter(({ data }) => data.featured).slice(0, 5);
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
-const homePath = getRelativeLocaleUrl(locale, "");
 ---
 
 <Layout>
   <Header />
-  <main
-    id="main-content"
-    data-layout="index"
-    data-home-path={homePath}
-    class="app-layout"
-  >
-    <section id="hero" class="border-border border-b pt-8 pb-6">
-      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        Mingalaba
-      </h1>
-      <a
-        target="_blank"
-        href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-        class="inline-block"
-        aria-label="RSS Feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={20}
-          height={20}
-          class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
-
-      <p>
-        AstroPaper is a minimal, responsive, accessible and SEO-friendly Astro
-        blog theme. This theme follows best practices and provides accessibility
-        out of the box. Light and dark mode are supported by default. Moreover,
-        additional color schemes can also be configured.
-      </p>
-      <p class="mt-2">
-        Read the blog posts or check
-        <LinkButton
-          class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href="https://github.com/satnaing/astro-paper#readme"
-        >
-          README
-        </LinkButton> for more info.
-      </p>
-      {
-        socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-              {t.home.socialLinks}:
-            </div>
-            <Socials />
-          </div>
-        )
-      }
+  
+  <main id="main-content" class="mx-auto max-w-7xl px-4 py-6">
+    
+    <section id="hero-slider" class="mb-10">
+      <h2 class="text-xl font-bold mb-4 uppercase tracking-wider">Featured Stories</h2>
+      <div class="h-80 w-full rounded-xl bg-gray-800 flex items-center justify-center text-white">
+        <p>Slider Placeholder (Top 5 Featured)</p>
+      </div>
     </section>
 
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-border border-b": recentPosts.length > 0 },
-          ]}
-        >
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.featured}
-          </h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+      
+      <aside class="hidden md:block md:col-span-2 space-y-6">
+        <h3 class="font-bold uppercase text-sm border-b pb-2">Tech Categories</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-accent">Artificial Intelligence</a></li>
+          <li><a href="#" class="hover:text-accent">Web Development</a></li>
+          <li><a href="#" class="hover:text-accent">Cybersecurity</a></li>
+          <li><a href="#" class="hover:text-accent">Cloud Computing</a></li>
+          <li><a href="#" class="hover:text-accent">Software Engineering</a></li>
+        </ul>
 
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.recentPosts}
-          </h2>
-          <ul>
-            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+        <h3 class="font-bold uppercase text-sm border-b pb-2 pt-4">Tools & How-To</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-accent">PDF Utilities</a></li>
+          <li><a href="#" class="hover:text-accent">Image Processing</a></li>
+          <li><a href="#" class="hover:text-accent">Code Snippets</a></li>
+          <li><a href="#" class="hover:text-accent">Productivity Tools</a></li>
+          <li><a href="#" class="hover:text-accent">Tutorials</a></li>
+        </ul>
+      </aside>
 
-    <div class="my-8 text-center">
-      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
-        {t.home.allPosts}
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
-      </LinkButton>
+      <section class="md:col-span-7">
+        <h2 class="text-2xl font-semibold mb-6">Latest Updates</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {recentPosts.slice(0, 6).map(post => <Card {...post} />)}
+        </div>
+      </section>
+
+      <aside class="md:col-span-3 space-y-6">
+        <div class="p-5 border border-gray-200 rounded-lg dark:border-gray-700">
+          <h3 class="font-bold mb-4">Newsletter</h3>
+          <p class="text-sm mb-4">Subscribe for the latest tech news.</p>
+          <input type="email" placeholder="Your email" class="w-full p-2 border rounded text-sm mb-2" />
+          <button class="w-full bg-accent text-white py-2 rounded text-sm">Subscribe</button>
+        </div>
+        
+        <div class="p-5 border border-gray-200 rounded-lg dark:border-gray-700">
+          <h3 class="font-bold mb-4">Popular Posts</h3>
+        </div>
+      </aside>
+
     </div>
   </main>
+  
   <Footer />
 </Layout>
-
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset;
-    const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-    if (indexLayout?.layout) {
-      sessionStorage.setItem("backUrl", indexLayout.homePath ?? baseRoot);
-    }
-  });
-</script>
