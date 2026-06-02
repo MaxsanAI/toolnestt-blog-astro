@@ -9,8 +9,10 @@ type Props = {
 } & CollectionEntry<"posts">;
 
 const { variant: Heading = "h2", id, data, filePath } = Astro.props;
-
 const { title, description, tags, ...props } = data;
+
+// Funkcija za procenu vremena čitanja (u minutima)
+const readingTime = Math.ceil(data.body.split(" ").length / 200);
 ---
 
 <li class="p-5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 transition-all hover:border-accent shadow-sm">
@@ -26,10 +28,13 @@ const { title, description, tags, ...props } = data;
     </Heading>
   </a>
   
-  <div class="flex items-center gap-2 text-xs text-gray-500 mb-3">
+  <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
     <Datetime {...props} />
+    <span class="flex items-center gap-1">
+      • {readingTime} min read
+    </span>
     {tags && tags.length > 0 && (
-      <span class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded">
+      <span class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded ml-auto">
         {tags[0]}
       </span>
     )}
