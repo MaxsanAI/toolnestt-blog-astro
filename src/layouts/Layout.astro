@@ -5,6 +5,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
+import Footer from "@/components/Footer.astro";
 import "@/styles/global.css";
 
 type Props = {
@@ -101,7 +102,11 @@ const rssHref = getRelativeLocaleUrl(
   <body
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground min-h-screen flex flex-col"
   >
-    <slot />
+    <div class="flex-grow">
+      <slot />
+    </div>
+    
+    <Footer />
 
     <script>
       import "@/scripts/theme";
