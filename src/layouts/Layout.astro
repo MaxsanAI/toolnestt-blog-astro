@@ -103,9 +103,7 @@ const rssHref = getRelativeLocaleUrl(
   <body
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground min-h-screen flex flex-col"
   >
-    <div class="portal-layout flex-grow w-full">
-      <slot />
-    </div>
+    <slot />
 
     <script>
       import "@/scripts/theme";
